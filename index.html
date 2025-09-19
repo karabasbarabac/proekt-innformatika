@@ -1,11 +1,514 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сравнение видеокарт</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --secondary-light: #34495e;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray: #95a5a6;
+            --gray-light: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            animation: fadeInDown 1s ease;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            animation: fadeInUp 1s ease;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        section:hover::before {
+            opacity: 1;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #eaeaea;
+            position: relative;
+            font-size: 1.8rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .card-selectors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-selector {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%232c3e50" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(52, 152, 219, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+        }
+
+        .results {
+            overflow-x: auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-table th, 
+        .comparison-table td {
+            padding: 1.2rem;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+
+        .comparison-table th {
+            background-color: var(--secondary);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .comparison-table tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #f0f7ff;
+        }
+
+        .better {
+            background-color: rgba(46, 204, 113, 0.15) !important;
+            position: relative;
+        }
+
+        .better::after {
+            content: '✓';
+            position: absolute;
+            right: 10px;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .worse {
+            background-color: rgba(231, 76, 60, 0.1) !important;
+            position: relative;
+        }
+
+        .worse::after {
+            content: '✗';
+            position: absolute;
+            right: 10px;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .gpu-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+            animation-fill-mode: backwards;
+        }
+
+        .gpu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            opacity: 0.7;
+        }
+
+        .gpu-card:nth-child(2n)::before {
+            background: linear-gradient(to right, var(--secondary), var(--secondary-light));
+        }
+
+        .gpu-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .gpu-card h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .gpu-card p {
+            margin-bottom: 0.75rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+
+        .gpu-card strong {
+            min-width: 120px;
+            display: inline-block;
+            color: var(--dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L0,100 Z" fill="rgba(0,0,0,0.05)"/></svg>');
+            background-size: cover;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            header {
+                padding: 2rem 1rem;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .card-selectors {
+                flex-direction: column;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .gpu-card {
+                padding: 1.2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            button {
+                width: 100%;
+                padding: 1.2rem;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, 
+            .comparison-table td {
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            section {
+                padding: 1.2rem;
+                border-radius: 10px;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .gpu-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .gpu-card p {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .gpu-card strong {
+                margin-bottom: 0.2rem;
+            }
+        }
+
+        /* Дополнительные стили для улучшения UX на мобильных */
+        select {
+            font-size: 16px; /* Предотвращает масштабирование на iOS */
+        }
+
+        /* Стили для скроллбара */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -66,6 +569,628 @@
         <p>Студент 11К группы Кузякин Ярослав 2025.</p>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script>
+        // База данных видеокарт с исправленными дубликатами ID
+        const graphicsCards = [
+            {
+                id: 1,
+                name: "NVIDIA GeForce RTX 4090",
+                manufacturer: "NVIDIA",
+                releaseDate: "2022",
+                memory: 24,
+                memoryType: "GDDR6X",
+                memoryBusWidth: 384,
+                baseClock: 2235,
+                boostClock: 2520,
+                cudaCores: 16384,
+                tdp: 450,
+                price: 159999
+            },
+            {
+                id: 2,
+                name: "AMD Radeon RX 7900 XTX",
+                manufacturer: "AMD",
+                releaseDate: "2022",
+                memory: 24,
+                memoryType: "GDDR6",
+                memoryBusWidth: 384,
+                baseClock: 1900,
+                boostClock: 2500,
+                streamProcessors: 6144,
+                tdp: 355,
+                price: 99999
+            },
+            {
+                id: 3,
+                name: "NVIDIA GeForce RTX 4080",
+                manufacturer: "NVIDIA",
+                releaseDate: "2022",
+                memory: 16,
+                memoryType: "GDDR6X",
+                memoryBusWidth: 256,
+                baseClock: 2205,
+                boostClock: 2505,
+                cudaCores: 9728,
+                tdp: 320,
+                price: 109999
+            },
+            {
+                id: 4,
+                name: "AMD Radeon RX 7800 XT",
+                manufacturer: "AMD",
+                releaseDate: "2023",
+                memory: 16,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1800,
+                boostClock: 2430,
+                streamProcessors: 3840,
+                tdp: 263,
+                price: 57999
+            },
+            {
+                id: 5,
+                name: "NVIDIA GeForce RTX 4070 Ti",
+                manufacturer: "NVIDIA",
+                releaseDate: "2023",
+                memory: 12,
+                memoryType: "GDDR6X",
+                memoryBusWidth: 192,
+                baseClock: 2310,
+                boostClock: 2610,
+                cudaCores: 7680,
+                tdp: 285,
+                price: 79999
+            },
+             {
+                id: 6,
+                name: "NVIDIA GeForce RTX 3060 Ti",
+                manufacturer: "NVIDIA",
+                releaseDate: "2020",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1410,
+                boostClock: 1665,
+                cudaCores: 4864,
+                tdp: 200,
+                price: 39999
+            },
+            {
+                id: 7,
+                name: "AMD Radeon RX 6700 XT",
+                manufacturer: "AMD",
+                releaseDate: "2021",
+                memory: 12,
+                memoryType: "GDDR6",
+                memoryBusWidth: 192,
+                baseClock: 2321,
+                boostClock: 2581,
+                streamProcessors: 2560,
+                tdp: 230,
+                price: 45999
+            },
+            {
+                id: 8,
+                name: "NVIDIA GeForce RTX 3070",
+                manufacturer: "NVIDIA",
+                releaseDate: "2020",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1500,
+                boostClock: 1725,
+                cudaCores: 5888,
+                tdp: 220,
+                price: 49999
+            },
+            {
+                id: 9,
+                name: "AMD Radeon RX 6800",
+                manufacturer: "AMD",
+                releaseDate: "2020",
+                memory: 16,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1700,
+                boostClock: 2105,
+                streamProcessors: 3840,
+                tdp: 250,
+                price: 59999
+            },
+            {
+                id: 10,
+                name: "NVIDIA GeForce GTX 1660 Super",
+                manufacturer: "NVIDIA",
+                releaseDate: "2019",
+                memory: 6,
+                memoryType: "GDDR6",
+                memoryBusWidth: 192,
+                baseClock: 1530,
+                boostClock: 1785,
+                cudaCores: 1408,
+                tdp: 125,
+                price: 24999
+            },
+            {
+                id: 11,
+                name: "AMD Radeon RX 5700 XT",
+                manufacturer: "AMD",
+                releaseDate: "2019",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1605,
+                boostClock: 1905,
+                streamProcessors: 2560,
+                tdp: 225,
+                price: 32999
+            },
+            {
+                id: 12,
+                name: "NVIDIA GeForce RTX 3090",
+                manufacturer: "NVIDIA",
+                releaseDate: "2020",
+                memory: 24,
+                memoryType: "GDDR6X",
+                memoryBusWidth: 384,
+                baseClock: 1395,
+                boostClock: 1695,
+                cudaCores: 10496,
+                tdp: 350,
+                price: 129999
+            },
+            {
+                id: 13,
+                name: "AMD Radeon RX 6600 XT",
+                manufacturer: "AMD",
+                releaseDate: "2021",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 1968,
+                boostClock: 2589,
+                streamProcessors: 2048,
+                tdp: 160,
+                price: 34999
+            },
+            {
+                id: 14,
+                name: "NVIDIA GeForce RTX 3050",
+                manufacturer: "NVIDIA",
+                releaseDate: "2022",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 1552,
+                boostClock: 1777,
+                cudaCores: 2560,
+                tdp: 130,
+                price: 27999
+            },
+            {
+                id: 15,
+                name: "AMD Radeon RX 6500 XT",
+                manufacturer: "AMD",
+                releaseDate: "2022",
+                memory: 4,
+                memoryType: "GDDR6",
+                memoryBusWidth: 64,
+                baseClock: 2310,
+                boostClock: 2610,
+                streamProcessors: 1024,
+                tdp: 107,
+                price: 19999
+            },
+             {
+                id: 16,
+                name: "NVIDIA GeForce RTX 2080 Ti",
+                manufacturer: "NVIDIA",
+                releaseDate: "2018",
+                memory: 11,
+                memoryType: "GDDR6",
+                memoryBusWidth: 352,
+                baseClock: 1350,
+                boostClock: 1545,
+                cudaCores: 4352,
+                tdp: 250,
+                price: 89999
+            },
+            {
+                id: 17,
+                name: "AMD Radeon RX 5700",
+                manufacturer: "AMD",
+                releaseDate: "2019",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1465,
+                boostClock: 1625,
+                streamProcessors: 2304,
+                tdp: 180,
+                price: 29999
+            },
+            {
+                id: 18,
+                name: "NVIDIA GeForce RTX 2060 Super",
+                manufacturer: "NVIDIA",
+                releaseDate: "2019",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1470,
+                boostClock: 1650,
+                cudaCores: 2176,
+                tdp: 175,
+                price: 34999
+            },
+            {
+                id: 19,
+                name: "AMD Radeon RX 5600 XT",
+                manufacturer: "AMD",
+                releaseDate: "2020",
+                memory: 6,
+                memoryType: "GDDR6",
+                memoryBusWidth: 192,
+                baseClock: 1375,
+                boostClock: 1560,
+                streamProcessors: 2304,
+                tdp: 150,
+                price: 25999
+            },
+            {
+                id: 20,
+                name: "NVIDIA GeForce GTX 1080 Ti",
+                manufacturer: "NVIDIA",
+                releaseDate: "2017",
+                memory: 11,
+                memoryType: "GDDR5X",
+                memoryBusWidth: 352,
+                baseClock: 1480,
+                boostClock: 1582,
+                cudaCores: 3584,
+                tdp: 250,
+                price: 59999
+            },
+            {
+                id: 21,
+                name: "AMD Radeon RX Vega 64",
+                manufacturer: "AMD",
+                releaseDate: "2017",
+                memory: 8,
+                memoryType: "HBM2",
+                memoryBusWidth: 2048,
+                baseClock: 1247,
+                boostClock: 1546,
+                streamProcessors: 4096,
+                tdp: 295,
+                price: 49999
+            },
+            {
+                id: 22,
+                name: "NVIDIA GeForce RTX 4070",
+                manufacturer: "NVIDIA",
+                releaseDate: "2023",
+                memory: 12,
+                memoryType: "GDDR6X",
+                memoryBusWidth: 192,
+                baseClock: 1920,
+                boostClock: 2475,
+                cudaCores: 5888,
+                tdp: 200,
+                price: 64999
+            },
+            {
+                id: 23,
+                name: "AMD Radeon RX 7600",
+                manufacturer: "AMD",
+                releaseDate: "2023",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 2250,
+                boostClock: 2620,
+                streamProcessors: 2048,
+                tdp: 165,
+                price: 31999
+            },
+            {
+                id: 24,
+                name: "NVIDIA GeForce RTX 4060 Ti",
+                manufacturer: "NVIDIA",
+                releaseDate: "2023",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 2310,
+                boostClock: 2535,
+                cudaCores: 4352,
+                tdp: 160,
+                price: 45999
+            },
+            {
+                id: 25,
+                name: "AMD Radeon RX 6950 XT",
+                manufacturer: "AMD",
+                releaseDate: "2022",
+                memory: 16,
+                memoryType: "GDDR6",
+                memoryBusWidth: 256,
+                baseClock: 1925,
+                boostClock: 2310,
+                streamProcessors: 5120,
+                tdp: 335,
+                price: 79999
+            },
+            {
+                id: 26,
+                name: "NVIDIA Titan RTX",
+                manufacturer: "NVIDIA",
+                releaseDate: "2018",
+                memory: 24,
+                memoryType: "GDDR6",
+                memoryBusWidth: 384,
+                baseClock: 1350,
+                boostClock: 1770,
+                cudaCores: 4608,
+                tdp: 280,
+                price: 199999
+            },
+            {
+                id: 27,
+                name: "AMD Radeon VII",
+                manufacturer: "AMD",
+                releaseDate: "2019",
+                memory: 16,
+                memoryType: "HBM2",
+                memoryBusWidth: 4096,
+                baseClock: 1400,
+                boostClock: 1750,
+                streamProcessors: 3840,
+                tdp: 300,
+                price: 69999
+            },
+            {
+                id: 28,
+                name: "NVIDIA GeForce GTX 1070",
+                manufacturer: "NVIDIA",
+                releaseDate: "2016",
+                memory: 8,
+                memoryType: "GDDR5",
+                memoryBusWidth: 256,
+                baseClock: 1506,
+                boostClock: 1683,
+                cudaCores: 1920,
+                tdp: 150,
+                price: 29999
+            },
+            {
+                id: 29,
+                name: "AMD Radeon RX 580",
+                manufacturer: "AMD",
+                releaseDate: "2017",
+                memory: 8,
+                memoryType: "GDDR5",
+                memoryBusWidth: 256,
+                baseClock: 1257,
+                boostClock: 1340,
+                streamProcessors: 2304,
+                tdp: 185,
+                price: 17999
+            },
+            {
+                id: 30,
+                name: "NVIDIA GeForce RTX 4060",
+                manufacturer: "NVIDIA",
+                releaseDate: "2023",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 1830,
+                boostClock: 2460,
+                cudaCores: 3072,
+                tdp: 115,
+                price: 34999
+            },
+            {
+                id: 31,
+                name: "AMD Radeon RX 6600",
+                manufacturer: "AMD",
+                releaseDate: "2021",
+                memory: 8,
+                memoryType: "GDDR6",
+                memoryBusWidth: 128,
+                baseClock: 1626,
+                boostClock: 2491,
+                streamProcessors: 1792,
+                tdp: 132,
+                price: 29999
+            }
+        ];
+
+        // Анимация появления элементов при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const gpu1Select = document.getElementById('gpu1');
+            const gpu2Select = document.getElementById('gpu2');
+            const cardsContainer = document.getElementById('cards-container');
+            
+            // Заполняем выпадающие списки
+            graphicsCards.forEach(card => {
+                const option1 = document.createElement('option');
+                option1.value = card.id;
+                option1.textContent = card.name;
+                gpu1Select.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = card.id;
+                option2.textContent = card.name;
+                gpu2Select.appendChild(option2);
+            });
+            
+            // Создаем карточки видеокарт
+            graphicsCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'gpu-card';
+                cardElement.innerHTML = `
+                    <h3>${card.name}</h3>
+                    <p><strong>Производитель:</strong> ${card.manufacturer}</p>
+                    <p><strong>Память:</strong> ${card.memory} GB ${card.memoryType}</p>
+                    <p><strong>Тактовая частота:</strong> ${card.baseClock} MHz</p>
+                    <p><strong>TDP:</strong> ${card.tdp} W</p>
+                    <p><strong>Цена:</strong> ${card.price.toLocaleString()} руб.</p>
+                `;
+                cardsContainer.appendChild(cardElement);
+            });
+            
+            // Обработчик кнопки сравнения
+            document.getElementById('compare-btn').addEventListener('click', compareGPUs);
+            
+            // Анимация для карточек видеокарт
+            const cards = document.querySelectorAll('.gpu-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Плавная прокрутка к результатам
+            const compareBtn = document.getElementById('compare-btn');
+            if (compareBtn) {
+                compareBtn.addEventListener('click', function() {
+                    setTimeout(() => {
+                        const resultsSection = document.getElementById('results');
+                        if (resultsSection.style.display !== 'none') {
+                            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 300);
+                });
+            }
+            
+            // Оптимизация для мобильных устройств
+            optimizeMobileUX();
+        });
+
+        // Функция сравнения видеокарт
+        function compareGPUs() {
+            const gpu1Id = document.getElementById('gpu1').value;
+            const gpu2Id = document.getElementById('gpu2').value;
+            
+            if (!gpu1Id || !gpu2Id) {
+                alert('Пожалуйста, выберите две видеокарты для сравнения');
+                return;
+            }
+            
+            const gpu1 = graphicsCards.find(card => card.id == gpu1Id);
+            const gpu2 = graphicsCards.find(card => card.id == gpu2Id);
+            
+            if (!gpu1 || !gpu2) {
+                alert('Ошибка: видеокарты не найдены');
+                return;
+            }
+            
+            // Заполняем таблицу сравнения
+            document.getElementById('gpu1-name').textContent = gpu1.name;
+            document.getElementById('gpu2-name').textContent = gpu2.name;
+            
+            const tbody = document.querySelector('.comparison-table tbody');
+            tbody.innerHTML = '';
+            
+            // Добавляем строки сравнения
+            addComparisonRow(tbody, 'Производитель', gpu1.manufacturer, gpu2.manufacturer);
+            addComparisonRow(tbody, 'Год выпуска', gpu1.releaseDate, gpu2.releaseDate);
+            addComparisonRow(tbody, 'Объем памяти', `${gpu1.memory} GB`, `${gpu2.memory} GB`, 
+                            gpu1.memory, gpu2.memory, 'more');
+            addComparisonRow(tbody, 'Тип памяти', gpu1.memoryType, gpu2.memoryType);
+            addComparisonRow(tbody, 'Ширина шины памяти', `${gpu1.memoryBusWidth} bit`, `${gpu2.memoryBusWidth} bit`, 
+                            gpu1.memoryBusWidth, gpu2.memoryBusWidth, 'more');
+            addComparisonRow(tbody, 'Базовая частота', `${gpu1.baseClock} MHz`, `${gpu2.baseClock} MHz`, 
+                            gpu1.baseClock, gpu2.baseClock, 'more');
+            
+            if (gpu1.boostClock && gpu2.boostClock) {
+                addComparisonRow(tbody, 'Boost частота', `${gpu1.boostClock} MHz`, `${gpu2.boostClock} MHz`, 
+                                gpu1.boostClock, gpu2.boostClock, 'more');
+            }
+            
+            if (gpu1.cudaCores) {
+                const gpu2Cores = gpu2.cudaCores || gpu2.streamProcessors;
+                addComparisonRow(tbody, 'Количество ядер', gpu1.cudaCores, gpu2Cores, 
+                                gpu1.cudaCores, gpu2Cores, 'more');
+            } else if (gpu1.streamProcessors) {
+                const gpu2Cores = gpu2.streamProcessors || gpu2.cudaCores;
+                addComparisonRow(tbody, 'Количество ядер', gpu1.streamProcessors, gpu2Cores, 
+                                gpu1.streamProcessors, gpu2Cores, 'more');
+            }
+            
+            addComparisonRow(tbody, 'TDP', `${gpu1.tdp} W`, `${gpu2.tdp} W`, 
+                            gpu1.tdp, gpu2.tdp, 'less');
+            addComparisonRow(tbody, 'Цена', `${gpu1.price.toLocaleString()} руб.`, `${gpu2.price.toLocaleString()} руб.`, 
+                            gpu1.price, gpu2.price, 'less');
+            
+            // Показываем результаты
+            document.getElementById('results').style.display = 'block';
+        }
+
+        // Добавление строки в таблицу сравнения
+        function addComparisonRow(tbody, characteristic, value1, value2, num1 = null, num2 = null, comparisonType = null) {
+            const row = document.createElement('tr');
+            
+            // Характеристика
+            const charCell = document.createElement('td');
+            charCell.textContent = characteristic;
+            row.appendChild(charCell);
+            
+            // Значение первой видеокарты
+            const value1Cell = document.createElement('td');
+            value1Cell.textContent = value1;
+            
+            // Значение второй видеокарты
+            const value2Cell = document.createElement('td');
+            value2Cell.textContent = value2;
+            
+            // Сравнение числовых значений, если предоставлены
+            if (num1 !== null && num2 !== null && comparisonType) {
+                if (comparisonType === 'more') {
+                    if (num1 > num2) {
+                        value1Cell.classList.add('better');
+                        value2Cell.classList.add('worse');
+                    } else if (num1 < num2) {
+                        value1Cell.classList.add('worse');
+                        value2Cell.classList.add('better');
+                    }
+                } else if (comparisonType === 'less') {
+                    if (num1 < num2) {
+                        value1Cell.classList.add('better');
+                        value2Cell.classList.add('worse');
+                    } else if (num1 > num2) {
+                        value1Cell.classList.add('worse');
+                        value2Cell.classList.add('better');
+                    }
+                }
+            }
+            
+            row.appendChild(value1Cell);
+            row.appendChild(value2Cell);
+            tbody.appendChild(row);
+        }
+
+        // Добавление этой функции для улучшения UX на мобильных
+        function optimizeMobileUX() {
+            // Улучшение касаний на мобильных
+            if ('ontouchstart' in document.documentElement) {
+                document.body.classList.add('touch-device');
+                
+                // Увеличиваем область клика для выпадающих списков
+                const selects = document.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.style.minHeight = '44px'; // Минимальный размер для удобного касания
+                });
+                
+                // Увеличиваем область клика для кнопок
+                const buttons = document.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.style.minHeight = '44px';
+                    button.classList.add('touch-button');
+                });
+            }
+        }
+    </script>
 </body>
 </html>
